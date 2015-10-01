@@ -47,3 +47,19 @@ int sendByte(char *byte){
     *byte++;
     return 1;
 }
+
+/*This function sets up the serial port of the PIC for operation.
+Since it changes internal register values there are no arguments or
+return values associated with it.
+Baud rate set to 9600 but this is arbitrary. Lower baud is possibly better for multitasking,
+but higher baud makes for smaller data packets. Needs to be experimented with.
+*/
+void setupSerial(void){
+  TXSTAbits.SYNC = 0;             //Set to asynchronous mode
+  TXSTAbits.BRGH = 1;             //Set baudrate generator to high
+  TXSTAbits.TXEN = 1;
+  SPBRG = 25;                     //Set baudrate to 9600 for 4Mhz
+  RCSTAbits.CREN = 1;             //Enables receiver in continuous mode
+  RCSTAbits.SPEN = 1;             //enable serial port
+  //TXSTA = 0x24;                 //All settings up TXSTA done
+}
