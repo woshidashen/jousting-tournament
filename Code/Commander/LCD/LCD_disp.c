@@ -22,10 +22,10 @@ int pid_gain=50;
 int max_speed=20;
 int max_yaw=30;
 int ir_samp_e=60;
-const char s0[LCDl]="PID gain:";
-const char s1[LCDl]="Max speed:";
-const char s2[LCDl]="Max yaw:";
-const char s3[LCDl]="IR samp/est:";
+const char s0[LCDL]="PID gain:";
+const char s1[LCDL]="Max speed:";
+const char s2[LCDL]="Max yaw:";
+const char s3[LCDL]="IR samp/est:";
     
 const char *stringtab[4]={s0,s1,s2,s3};
 
@@ -40,8 +40,8 @@ void LCD_disp(int x)
 {
 
     int values[4]={pid_gain,max_speed,max_yaw,ir_samp_e};            
-    char  string[LCDl];
+    char  string[LCDL];
     sprintf(string, "%s %d\n", stringtab[x],values[x]);
     Lcd_Set_Cursor(1,1);
-    Lcd_Write_String(string1);
+    Lcd_Write_String(string);
 }
