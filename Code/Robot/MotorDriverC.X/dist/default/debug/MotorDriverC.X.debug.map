@@ -1,5 +1,5 @@
 MPLINK 4.48, Linker
-Linker Map File - Created Wed Oct 07 17:01:55 2015
+Linker Map File - Created Wed Oct 07 17:07:10 2015
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
@@ -43,7 +43,7 @@ Linker Map File - Created Wed Oct 07 17:01:55 2015
         .idata_fxd1616u.o      idata   0x0000b2       data   0x000000
           .udata___init.o      udata   0x0000b2       data   0x000000
           .idata___init.o      idata   0x0000b2       data   0x000000
-                   .stack      udata   0x000500       data   0x000100
+                   .stack      udata   0x000400       data   0x000100
             SFR_UNBANKED0      udata   0x000f80       data   0x000080
 
 

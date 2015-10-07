@@ -9,15 +9,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <p18f4520.h>
-#include "configReg4520.h"
+#include <p18f452.h>
+#include "configReg452.h"
+//#include <p18f4520.h>
+//#include "configReg4520.h"
 
 #define bit(x) (1<<(x)) 
 #define test_bit(var,pos) ((var) & (1<<(pos)))
 //#define change_bit(var,pos,val) ()
 //number ^= (-x ^ number) & (1 << n);
 
-unsigned int L_PWM = 50;  // value between 0 (0 duty cycle) and FF (100 duty cycle)
+unsigned int L_PWM = 0xFE;  // value between 0 (0 duty cycle) and FF (100 duty cycle)
 unsigned int L_dir = 1; // 1 is fwd, 0 is back
 unsigned int L_inputA = 0;
 unsigned int L_inputB = 0;
@@ -32,8 +34,11 @@ unsigned int bit_2A = 4;
 unsigned int bit_2B = 5;
 unsigned int bit_enable = 3;
 unsigned int length_wheels = 15; // length between wheels cm
-unsigned int vel = 128; // 'velocity' associated with 50% duty cycle
-unsigned int max_Dvx;
+unsigned int vel = 0x10; // 'velocity' associated with 50% duty cycle
+unsigned int max_Dvx=0;
+unsigned int full = 255;
+unsigned int half = 128;
+unsigned int two = 2;
 
 void PWM_motor_setup(void);
 void Inputs_motor_setup(void);
@@ -76,15 +81,20 @@ void direction(void){
 // update PWM values
 void turn(unsigned int POT_val){
     // 128 is middle, which is no turn
-    if (vel<=128){
+    if (vel<=half){
         max_Dvx = vel;
-    }else if (vel> 128){
-        max_Dvx = 255-vel;
+    }else if (vel > half){
+        max_Dvx = full-vel;
     }
-    L_PWM = (POT_val-128)*max_Dvx/128;
-    R_PWM = 2*vel-L_PWM;
+    if (POT_val>=half){
+        L_PWM = vel - (POT_val-half)*max_Dvx/half;
+    }else {
+        L_PWM = vel + (half-POT_val)*max_Dvx/half;
+    }
+    //L_PWM = (POT_val-half)*max_Dvx/half;
+    R_PWM = two*vel-L_PWM;
     CCPR1L = R_PWM;
-    CCPR2L = L_PWM;
+      CCPR2L = L_PWM;
 }
 
 
@@ -96,11 +106,12 @@ void main(void){
 
     
     for(;;){
-    while(test_bit(INTCON, INTCONbits.TMR0IF)==0){}   // busy loop
-    ADCON0 |= bit(ADCON0bits.GO); 
-    while(test_bit(PIR1, PIR1bits.ADIF)==0){}   // busy loop
+    while(INTCONbits.TMR0IF==0){}   // busy loop
+    ADCON0bits.GO=1; 
+    while(PIR1bits.ADIF==0){}   // busy loop wait for conversion to finish
     
     turn(ADRESH);  // does the 8 bit to unsigned int work?
     
     }
+    
 }
