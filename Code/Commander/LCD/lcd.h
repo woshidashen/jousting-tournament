@@ -3,6 +3,10 @@
 
 #include <p18cxxx.h>
 
+/*This file contains the prototypes of functions avaliable in lcd.c. Include this file
+for access to those functions in any other file.
+*/
+
 void Lcd_Port(char a);
 void Lcd_Cmd(char a);
 void Lcd_Clear();
